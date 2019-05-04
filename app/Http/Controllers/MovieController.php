@@ -13,9 +13,11 @@ class MovieController extends Controller
      */
     public function index()
     {
+        $movie_list = ['Fargo','Up','Toy Story'];
        if(view()->exists('view.list')){
             return view('view.list',[
-                'title' => '电影列表'
+                'title' => '电影列表',
+                'movie_list' => $movie_list,
             ]);
        }
     }
