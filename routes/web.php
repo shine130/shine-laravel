@@ -11,14 +11,27 @@
 |
 */
 
-Route::group(['prefix' => 'admin'], function(){
-    Route::get('user',function(){
-        return '管理用户';
-    });
-    Route::get('content',function(){
-        return '管理内容';
-    });
-});
+Route::resource('movie','MovieController',['only' => ['index','show']]);
+
+// Route::get('movie',[
+//     'uses' => 'Movie\MovieController@showMovieList',
+//     'as'   => 'movie_list'
+// ]);
+
+// $url = route('movie_list');
+// $url = action('Movie\MovieController@showMovieList');
+// var_dump($url);
+
+// Route::get('movie/{id}','Movie\MovieController@showMovie');
+
+// Route::group(['prefix' => 'admin'], function(){
+//     Route::get('user',function(){
+//         return '管理用户';
+//     });
+//     Route::get('content',function(){
+//         return '管理内容';
+//     });
+// });
 
 // Route::get('user/login', ['as' => 'login',function () {
 //     return '用户登录';
