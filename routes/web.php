@@ -11,7 +11,11 @@
 |
 */
 
-Route::resource('movie','MovieController',['only' => ['index','show']]);
+Route::resource('movie','MovieController');
+
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Route::get('movie',[
 //     'uses' => 'Movie\MovieController@showMovieList',
@@ -38,13 +42,13 @@ Route::resource('movie','MovieController',['only' => ['index','show']]);
 // }]);
 
 
-Route::get('user/login', function(){
-    return '用户登录';
-})->name('login');
+// Route::get('user/login', function(){
+//     return '用户登录';
+// })->name('login');
 
-Route::get('user/profile',function(){
-    return redirect()->route('login');
-});
+// Route::get('user/profile',function(){
+//     return redirect()->route('login');
+// });
 
 
 // Route::get('movie/{movie_id}',function($movie_id){
@@ -63,9 +67,7 @@ Route::get('user/profile',function(){
 //     return '电影';
 // });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 // Route::get('movie',function(){
 //     return '电影列表';

@@ -13,7 +13,11 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return '电影列表';
+       if(view()->exists('view.list')){
+            return view('view.list',[
+                'title' => '电影列表'
+            ]);
+       }
     }
 
     /**
@@ -45,7 +49,9 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        return '电影' . $id;
+            return view('view.list',[
+                'title' => '电影'
+            ]);
     }
 
     /**
