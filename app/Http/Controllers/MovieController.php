@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
@@ -13,13 +14,8 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movie_list = ['Fargo','Up','Toy Story'];
-       if(view()->exists('view.list')){
-            return view('view.list',[
-                'title' => '电影列表',
-                'movie_list' => $movie_list,
-            ]);
-       }
+        $movies = DB::select('SELECT * FROM movies');
+        return view('movies.index')->with('movies',$movies);
     }
 
     /**
@@ -29,7 +25,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        return '创建电影用的表单';
+        return view('movies.form');
     }
 
     /**
@@ -40,7 +36,14 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        return '发布电影';
+        $movie_title = $request->movie_title;
+        $movie_content = $request->movie_content;
+        $movie_budget = $request->movie_budget;
+        $movie_date = $request->movie_date;
+        
+        DB::insert('INSERT INTO movies(movie_title,movie_content,movie_budget,movie_date) VALUES (?,?,?,?)',array($movie_title,$movie_content,$movie_budget,$movie_date));
+
+        return redirect('movie');
     }
 
     /**
@@ -51,9 +54,7 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-            return view('view.list',[
-                'title' => '电影'
-            ]);
+        //
     }
 
     /**
@@ -64,7 +65,8 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        return '编辑电影用的表单' . $id;
+        $movie = DB::select('SELECT * FROM movies WHERE movie_id = ?',array($id));
+        return view('movies.form')->with('movie',$movie);
     }
 
     /**
@@ -76,7 +78,13 @@ class MovieController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return '更新电影' . $id;
+        $movie_title = $request->movie_title;
+        $movie_content = $request->movie_content;
+        $movie_budget = $request->movie_budget;
+        $movie_date = $request->movie_date;
+        
+        DB::update('UPDATE movies SET movie_title = ? ,movie_content = ?,movie_budget = ? ,movie_date = ? WHERE movie_id = ?',array($movie_title,$movie_content,$movie_budget,$movie_date,$id));
+        return redirect('movie');
     }
 
     /**
@@ -87,6 +95,7 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        return '删除电影' . $id;
+        DB::delete('DELETE FROM movies WHERE movie_id = ?',array($id));
+        return redirect('movie');
     }
 }
