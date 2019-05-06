@@ -14,8 +14,33 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movies = DB::select('SELECT * FROM movies');
+        // $movies = DB::select('SELECT * FROM movies');
+        // return view('movies.index')->with('movies',$movies);
+        // $data = DB::table('movies')
+        // ->take(2)
+        // ->skip(2)
+        // ->orderBy('movie_date','DESC')
+        // ->select('movie_title','movie_date')
+        // ->first()
+        // ->pluck('movie_title');
+        // ->where('movie_id',3)->get();
+        // ->where('movie_budget','>',10000)->orwhere('movie_date','<','1997-01-01')->get();
+        // ->whereBetween('movie_date',array('1990-01-01','1999-12-31'))->get();
+        // ->whereNotBetween('movie_date',array('1990-01-01','1999-12-31'))->get();
+        // ->whereIn('movie_id',array(1,2,5))->get();
+        // ->whereNotIn('movie_id',array(1,2,5))->get();
+        // ->count();
+        // ->max('movie_budget');
+        // ->min('movie_budget');
+        // ->sum('movie_budget');
+        // ->avg('movie_budget');
+
+        // 关联 - join
+        // $data = DB::table('movies')->join('reviews','movies.movie_id','=','reviews.movie_id')->select('movie_title','review_rate','review_content')->get();
+        // print_r($data);
+        $movies = DB::table('movies')->get();
         return view('movies.index')->with('movies',$movies);
+
     }
 
     /**
@@ -41,7 +66,13 @@ class MovieController extends Controller
         $movie_budget = $request->movie_budget;
         $movie_date = $request->movie_date;
         
-        DB::insert('INSERT INTO movies(movie_title,movie_content,movie_budget,movie_date) VALUES (?,?,?,?)',array($movie_title,$movie_content,$movie_budget,$movie_date));
+        // DB::insert('INSERT INTO movies(movie_title,movie_content,movie_budget,movie_date) VALUES (?,?,?,?)',array($movie_title,$movie_content,$movie_budget,$movie_date));
+        DB::table('movies')->insert(array(
+            'movie_title'   => $movie_title,
+            'movie_content' => $movie_content,
+            'movie_budget'  => $movie_budget,
+            'movie_date'    => $movie_date
+        ));
 
         return redirect('movie');
     }
@@ -65,7 +96,8 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        $movie = DB::select('SELECT * FROM movies WHERE movie_id = ?',array($id));
+        // $movie = DB::select('SELECT * FROM movies WHERE movie_id = ?',array($id));
+        $movie = DB::table('movies')->where('movie_id',$id)->first();
         return view('movies.form')->with('movie',$movie);
     }
 
@@ -83,7 +115,15 @@ class MovieController extends Controller
         $movie_budget = $request->movie_budget;
         $movie_date = $request->movie_date;
         
-        DB::update('UPDATE movies SET movie_title = ? ,movie_content = ?,movie_budget = ? ,movie_date = ? WHERE movie_id = ?',array($movie_title,$movie_content,$movie_budget,$movie_date,$id));
+        // DB::update('UPDATE movies SET movie_title = ? ,movie_content = ?,movie_budget = ? ,movie_date = ? WHERE movie_id = ?',array($movie_title,$movie_content,$movie_budget,$movie_date,$id));
+
+        DB::table('movies')->where('movie_id',$id)->update(array(
+            'movie_title'    => $movie_title,
+            'movie_content'  => $movie_content,
+            'movie_budget'   => $movie_budget,
+            'movie_date'     => $movie_date
+        ));
+
         return redirect('movie');
     }
 
@@ -95,7 +135,8 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        DB::delete('DELETE FROM movies WHERE movie_id = ?',array($id));
+        // DB::delete('DELETE FROM movies WHERE movie_id = ?',array($id));
+        DB::table('movies')->where('movie_id',$id)->delete();
         return redirect('movie');
     }
 }
