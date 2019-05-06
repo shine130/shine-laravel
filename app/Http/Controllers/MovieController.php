@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Movie;
 
 class MovieController extends Controller
 {
@@ -38,7 +39,11 @@ class MovieController extends Controller
         // 关联 - join
         // $data = DB::table('movies')->join('reviews','movies.movie_id','=','reviews.movie_id')->select('movie_title','review_rate','review_content')->get();
         // print_r($data);
-        $movies = DB::table('movies')->get();
+        // $movies = DB::table('movies')->get();
+
+        // 模型
+        $movies = Movie::paginate(2);
+        // // print_r($movies);
         return view('movies.index')->with('movies',$movies);
 
     }
@@ -67,12 +72,21 @@ class MovieController extends Controller
         $movie_date = $request->movie_date;
         
         // DB::insert('INSERT INTO movies(movie_title,movie_content,movie_budget,movie_date) VALUES (?,?,?,?)',array($movie_title,$movie_content,$movie_budget,$movie_date));
-        DB::table('movies')->insert(array(
-            'movie_title'   => $movie_title,
-            'movie_content' => $movie_content,
-            'movie_budget'  => $movie_budget,
-            'movie_date'    => $movie_date
-        ));
+
+        // DB::table('movies')->insert(array(
+        //     'movie_title'   => $movie_title,
+        //     'movie_content' => $movie_content,
+        //     'movie_budget'  => $movie_budget,
+        //     'movie_date'    => $movie_date
+        // ));
+
+        // 模型
+        $movie = new Movie;
+        $movie->movie_title = $movie_title;
+        $movie->movie_content = $movie_content;
+        $movie->movie_budget = $movie_budget;
+        $movie->movie_date = $movie_date;
+        $movie->save();
 
         return redirect('movie');
     }
@@ -97,7 +111,12 @@ class MovieController extends Controller
     public function edit($id)
     {
         // $movie = DB::select('SELECT * FROM movies WHERE movie_id = ?',array($id));
-        $movie = DB::table('movies')->where('movie_id',$id)->first();
+        // $movie = DB::table('movies')->where('movie_id',$id)->first();
+
+        // 模型
+
+        $movie = Movie::find($id);
+
         return view('movies.form')->with('movie',$movie);
     }
 
@@ -117,12 +136,23 @@ class MovieController extends Controller
         
         // DB::update('UPDATE movies SET movie_title = ? ,movie_content = ?,movie_budget = ? ,movie_date = ? WHERE movie_id = ?',array($movie_title,$movie_content,$movie_budget,$movie_date,$id));
 
-        DB::table('movies')->where('movie_id',$id)->update(array(
-            'movie_title'    => $movie_title,
-            'movie_content'  => $movie_content,
-            'movie_budget'   => $movie_budget,
-            'movie_date'     => $movie_date
-        ));
+        // DB::table('movies')->where('movie_id',$id)->update(array(
+        //     'movie_title'    => $movie_title,
+        //     'movie_content'  => $movie_content,
+        //     'movie_budget'   => $movie_budget,
+        //     'movie_date'     => $movie_date
+        // ));
+
+        // 模型
+        $movie = Movie::find($id);
+
+        $movie->movie_title = $movie_title;
+        $movie->movie_content = $movie_content;
+        $movie->movie_budget = $movie_budget;
+        $movie->movie_date = $movie_date;
+
+        $movie->save();
+
 
         return redirect('movie');
     }
@@ -136,7 +166,11 @@ class MovieController extends Controller
     public function destroy($id)
     {
         // DB::delete('DELETE FROM movies WHERE movie_id = ?',array($id));
-        DB::table('movies')->where('movie_id',$id)->delete();
+        // DB::table('movies')->where('movie_id',$id)->delete();
+        // 模型
+
+        Movie::destroy($id);
+
         return redirect('movie');
     }
 }

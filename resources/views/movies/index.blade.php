@@ -13,5 +13,5 @@
         </li>
     @endforeach
   </ul>
-
+{{$movies->links()}}
 @stop
