@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Movie;
+use App\Review;
+use App\People;
+
 
 class MovieController extends Controller
 {
@@ -42,9 +45,19 @@ class MovieController extends Controller
         // $movies = DB::table('movies')->get();
 
         // 模型
-        $movies = Movie::paginate(2);
+        // $movies = Movie::paginate(2);
         // // print_r($movies);
-        return view('movies.index')->with('movies',$movies);
+        // return view('movies.index')->with('movies',$movies);
+
+        // 一对多的关系
+        // $data = Movie::find(1)->reviews;
+        // $data = Review::find(1)->movie->movie_title;
+        // print_r($data);
+
+        // 多对多的关系
+        $data = Movie::find(1)->people;
+        // $data = People::find(1)->movies;
+        print_r($data);
 
     }
 
@@ -99,7 +112,9 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        //
+        $movie = Movie::with('reviews','people')->find($id);
+
+        return view('movies.single')->with('movie',$movie);
     }
 
     /**

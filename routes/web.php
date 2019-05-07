@@ -12,6 +12,7 @@
 */
 
 Route::resource('movie','MovieController');
+Route::resource('movie/{movie_id}/reviews','ReviewController');
 
 Route::get('/', function () {
     return view('welcome');
