@@ -10,12 +10,41 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Movie;
+use App\People;
 
 Route::resource('movie','MovieController');
 Route::resource('movie/{movie_id}/reviews','ReviewController');
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('related-people',function(){
+    $movie = Movie::find(2);
+    // $movie->people()->attach(4,array('job' => '演员')); /*  插入多对多关系 */
+    // $movie->people()->detach(4); /* 取消多对多关系 */
+
+    // 插入多个多对多关系
+    // $movie->people()->sync(array(
+    //     1 => array('job' => '演员'),
+    //     2 => array('job' => '演员'),
+    //     3 => array('job' => '演员'),
+    //     4 => array('job' => '演员')
+    // ));
+
+    // 取消多个多对多关系
+    // $movie->people()->detach(array(1,2,3,4));
+
+    // 创建关联的同时创建所关联的模型
+    $person = new People;
+    $person->people_name = '高登';
+    $person->people_location = '美国';
+    $person->people_birth = '1981-02-17';
+
+    $movie->people()->save($person,array('job' => '演员'));
+
+
 });
 
 // Route::get('movie',[
